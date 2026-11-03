@@ -1,15 +1,27 @@
 {
   "app": {
-    // 签名配置不入库：包含证书路径与密钥口令，泄漏后无法从 git 历史中撤回。
-    // 新机器克隆后，在 DevEco Studio 中执行：
-    //   File -> Project Structure -> Signing Configs -> 勾选 Automatically generate signature
-    // DevEco 会自动把 signingConfigs 写回本文件（本地修改，不要提交）。
-    "signingConfigs": [],
+    "signingConfigs": [
+      {
+        "name": "default",
+        "type": "HarmonyOS",
+        "material": {
+          "certpath": "C:\\Users\\11382\\.ohos\\config\\default_ohos_ByqHNoT5Qb-4NYA6WX02aEcxBUzEtqlxPOV8yclf8bo=.cer",
+          "keyAlias": "debugKey",
+          "keyPassword": "0000001BF3A827E9364CD96011AAC2A10920E1272367E3E50A6B87EBD9FF5F64D5C4956A688A04E8E54899",
+          "profile": "C:\\Users\\11382\\.ohos\\config\\default_ohos_ByqHNoT5Qb-4NYA6WX02aEcxBUzEtqlxPOV8yclf8bo=.p7b",
+          "signAlg": "SHA256withECDSA",
+          "storeFile": "C:\\Users\\11382\\.ohos\\config\\default_ohos_ByqHNoT5Qb-4NYA6WX02aEcxBUzEtqlxPOV8yclf8bo=.p12",
+          "storePassword": "0000001BDC7E42B54289E393A9CF6690FDBDA0E46CC013D46B7B8675D98AFC90A735CE261124F86CAE7DCF"
+        }
+      }
+    ],
     "products": [
       {
         "name": "default",
+        "signingConfig": "default",
         "compatibleSdkVersion": "26.0.0",
         "runtimeOS": "HarmonyOS",
+        "targetSdkVersion": "26.0.0"
       }
     ],
     "buildModeSet": [
