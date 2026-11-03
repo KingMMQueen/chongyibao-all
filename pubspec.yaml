@@ -1,0 +1,27 @@
+name: chongyibao
+description: 一套代码运行于 Android / iOS / HarmonyOS 的视频与图集应用
+publish_to: "none"
+version: 0.1.0+1
+
+# 基线锁定：鸿蒙分支 flutter_flutter 最新为 br_3.27.4-ohos-1.0.4，
+# 因此全项目统一在 Flutter 3.27 / Dart 3.6 的 API 面上编写。
+# 不锁 flutter 版本号是因为鸿蒙 SDK 为分支检出，版本号需手动打标签才能识别。
+environment:
+  sdk: ">=3.6.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # iOS 端播放内核（AVPlayer + FlutterTexture）。
+  # 只声明 ios 平台，Android / HarmonyOS 会自动忽略此插件。
+  media_kernel_ios:
+    path: packages/media_kernel_ios
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+
+flutter:
+  uses-material-design: true

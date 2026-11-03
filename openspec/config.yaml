@@ -1,0 +1,65 @@
+schema: spec-driven
+
+context: |
+  Language: zh-CN
+  All artifacts must be written in zh-CN.
+  Keep OpenSpec structural headings and SHALL/MUST keywords in English.
+
+  # 项目技术边界（摘自 AGENTS.md，优先级最高，任何方案不得违反）
+
+  产品形态：
+  - 一套 Flutter 代码同时发布 Android / iOS / HarmonyOS 三端市场。
+  - 禁止为单一平台单独设计 UI 或业务层；平台差异只允许落在 lib/platform/。
+
+  技术基线：
+  - Flutter 3.27.4 / Dart 3.6。
+  - Android 与 HarmonyOS 使用鸿蒙分支 SDK（D:\flutter\flutter_ohos327）。
+  - iOS 使用官方 Flutter 3.27.4，与分支 Dart 版本一致。
+
+  分层结构（lib/）：
+  - core/ 配置、日志、错误、工具
+  - domain/ 实体与仓储契约（不依赖 UI）
+  - data/ 数据源与仓储实现
+  - presentation/ 页面与组件（禁止出现 Platform.isXxx 之类判断）
+  - platform/ 平台能力（播放器、图片、上传）
+
+  播放器（已实现并真机验证）：
+  - 三端共用通道 app.chongyibao/player，契约见
+    lib/platform/media/player_channel.dart，改动必须同步三端。
+  - 画面必须走纹理：Android 用 SurfaceProducer，iOS 用 FlutterTexture，
+    鸿蒙用 TextureRegistry.getSurfaceId 交给 AVPlayer.surfaceId。
+  - 禁止原生视图叠层（SurfaceView / XComponent 直接覆盖）。
+  - 播放器 UI 全部自绘，不使用平台播放控件。
+
+  业务约束：
+  - 视频为纯 MP4 点播，无直播、无 DRM、无内购、无支付。
+  - MP4 由服务端保证 faststart 且支持 HTTP Range。
+  - 图片只加载服务端缩略图（URL 带宽度参数），不加载原图。
+
+  工程约束：
+  - 包名固定为 com.qkx.xiaochong.cyb（三端一致），不可修改。
+  - 未实现的平台能力必须抛 PlatformUnsupportedFailure，禁止静默降级。
+  - 质量门禁：flutter analyze 与 flutter test 必须通过。
+  - 无本地 Mac，iOS 端只能通过 Codemagic 云构建验证，未验证的 iOS 改动不算完成。
+
+# Per-artifact rules
+rules:
+  proposal:
+    - 必须写明「不在本次范围内」的内容
+    - 必须说明对三端一致性的影响（是否需要分端实现）
+  design:
+    - 必须指明是否存在平台差异代码，以及具体落在哪个文件
+    - 涉及播放器的方案必须说明纹理通路是否变化
+  tasks:
+    - 每个任务标注影响的端：shared / android / ios / ohos
+    - 涉及 iOS 的任务必须注明「需云构建验证」
+
+# Per-operation guidance
+operations:
+  apply:
+    guidance:
+      - 先跑 flutter analyze 与 flutter test，再声明完成
+      - 平台相关改动必须在真机或云构建上验证后才算完成
+  archive:
+    guidance:
+      - 归档前确认 specs/ 已同步为最终行为

@@ -1,0 +1,18 @@
+name: media_kernel_ios
+description: iOS 播放内核实现（AVPlayer + FlutterTexture），供三端统一通道使用
+version: 0.1.0
+publish_to: "none"
+
+environment:
+  sdk: ">=3.6.0 <4.0.0"
+  flutter: ">=3.27.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+flutter:
+  plugin:
+    platforms:
+      ios:
+        pluginClass: PlayerPlugin

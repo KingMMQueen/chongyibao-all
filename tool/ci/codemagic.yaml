@@ -1,0 +1,87 @@
+# Codemagic 构建配置（无本地 Mac 时的 iOS 交付路径）
+#
+# 首次使用需要：
+# 1. Codemagic 中添加 App Store Connect API Key，集成名命名 chongyibao_appstore
+# 2. Environment variables 里配置 PGYER_API_KEY（蒲公英，用于 Ad Hoc 内测）
+# 3. Apple Developer 后台把测试机 UDID 注册到 Ad Hoc 描述文件
+# 4. App Store Connect 中先创建应用记录，Bundle ID 用 com.qkx.xiaochong.cyb
+#
+# 注意：本项目 Android/HarmonyOS 用的是鸿蒙分支 Flutter，
+# iOS 一律用官方 Flutter 3.27.4（Dart 3.6，与分支一致），不要混用。
+
+workflows:
+  ios-testflight:
+    name: iOS -> TestFlight
+    instance_type: mac_mini_m2
+    max_build_duration: 60
+    integrations:
+      app_store_connect: chongyibao_appstore
+    environment:
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: com.qkx.xiaochong.cyb
+      flutter: 3.27.4
+      xcode: latest
+      cocoapods: default
+    triggering:
+      events:
+        - push
+      branch_patterns:
+        - pattern: main
+          include: true
+    scripts:
+      - name: 依赖
+        script: |
+          flutter pub get
+      - name: 静态检查与单元测试
+        script: |
+          flutter analyze
+          flutter test
+      - name: 配置签名
+        script: |
+          xcode-project use-profiles
+      - name: 构建 IPA
+        script: |
+          flutter build ipa --release \
+            --dart-define=PLAYER_KERNEL=native \
+            --export-options-plist=$HOME/export_options.plist
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+    publishing:
+      app_store_connect:
+        auth: integration
+        submit_to_testflight: true
+
+  ios-adhoc:
+    name: iOS -> Ad Hoc (Pgyer)
+    instance_type: mac_mini_m2
+    max_build_duration: 60
+    environment:
+      ios_signing:
+        distribution_type: ad_hoc
+        bundle_identifier: com.qkx.xiaochong.cyb
+      flutter: 3.27.4
+      xcode: latest
+      cocoapods: default
+    scripts:
+      - name: 依赖
+        script: |
+          flutter pub get
+      - name: 配置签名
+        script: |
+          xcode-project use-profiles
+      - name: 构建 IPA
+        script: |
+          flutter build ipa --release \
+            --dart-define=PLAYER_KERNEL=native \
+            --export-options-plist=$HOME/export_options.plist
+      - name: 上传蒲公英
+        script: |
+          IPA=$(ls build/ios/ipa/*.ipa | head -n 1)
+          curl -sS -F "file=@${IPA}" \
+            -F "_api_key=${PGYER_API_KEY}" \
+            -F "buildInstallType=2" \
+            https://www.pgyer.com/apiv2/app/upload
+    artifacts:
+      - build/ios/ipa/*.ipa

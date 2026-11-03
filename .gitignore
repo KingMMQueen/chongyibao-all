@@ -1,0 +1,60 @@
+# Flutter / Dart
+.dart_tool/
+.packages
+.pub-cache/
+.pub/
+build/
+.flutter-plugins
+.flutter-plugins-dependencies
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# Android
+android/.gradle/
+android/local.properties
+android/key.properties
+android/app/*.jks
+android/app/*.keystore
+
+# iOS
+ios/Pods/
+ios/.symlinks/
+ios/Flutter/Flutter.framework
+ios/Flutter/Flutter.podspec
+ios/Flutter/ephemeral/
+ios/Runner.xcworkspace/xcuserdata/
+*.ipa
+*.dSYM.zip
+
+# HarmonyOS
+ohos/.hvigor/
+ohos/oh_modules/
+ohos/build/
+ohos/local.properties
+ohos/entry/build/
+# 鸿蒙引擎 har 与依赖（体积大，由 ohpm install 生成）
+ohos/**/oh_modules/
+ohos/**/node_modules/
+
+# 本地插件包的构建产物
+packages/**/.dart_tool/
+packages/**/build/
+
+# 鸿蒙签名信息（含密钥路径，不提交到公开仓库）
+ohos/build-profile.json5.local
+
+# DevEco / IDE 生成的助手目录（内部自带 .git，会被误识别为 submodule）
+.codegenie/
+**/.codegenie/
+.idea/
+.vscode/
+*.hap
+*.hsp
+*.app
+
+# 其他
+*.log
+.DS_Store
+Thumbs.db

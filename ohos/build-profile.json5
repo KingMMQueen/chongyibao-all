@@ -1,0 +1,41 @@
+{
+  "app": {
+    // 签名配置不入库：包含证书路径与密钥口令，泄漏后无法从 git 历史中撤回。
+    // 新机器克隆后，在 DevEco Studio 中执行：
+    //   File -> Project Structure -> Signing Configs -> 勾选 Automatically generate signature
+    // DevEco 会自动把 signingConfigs 写回本文件（本地修改，不要提交）。
+    "signingConfigs": [],
+    "products": [
+      {
+        "name": "default",
+        "compatibleSdkVersion": "26.0.0",
+        "runtimeOS": "HarmonyOS",
+      }
+    ],
+    "buildModeSet": [
+      {
+        "name": "debug"
+      },
+      {
+        "name": "profile"
+      },
+      {
+        "name": "release"
+      }
+    ]
+  },
+  "modules": [
+    {
+      "name": "entry",
+      "srcPath": "./entry",
+      "targets": [
+        {
+          "name": "default",
+          "applyToProducts": [
+            "default"
+          ]
+        }
+      ]
+    }
+  ]
+}
