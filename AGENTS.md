@@ -131,6 +131,23 @@ flutter build hap --release
    生成的签名信息会写回 `ohos/build-profile.json5` 的 `signingConfigs`，
    之后 `scripts/build-hap.ps1` 可直接出可安装包。
 
+8. **`ohos/build-profile.json5` 已设置 `skip-worktree`**。
+   该文件本地包含证书路径与加密口令，仓库里是脱敏版本（`signingConfigs: []`），
+   两者必须长期共存。规则：
+
+   ```powershell
+   # 需要修改该文件（如重新签名）前，先解除
+   git update-index --no-skip-worktree ohos/build-profile.json5
+   # 改完再设回去
+   git update-index --skip-worktree ohos/build-profile.json5
+   ```
+
+   - `git pull` 提示该文件会被覆盖时，先解除标记 → `git checkout -- ohos/build-profile.json5` → 拉取 → 重新签名 → 重新设置
+   - **新机器克隆后必须重新执行一次 `skip-worktree`**（该标记不随仓库同步）
+   - **绝不允许提交带 `keyPassword` / `storePassword` 的版本**，
+     历史一旦推送到公开仓库无法撤回。提交前用
+     `git show HEAD:ohos/build-profile.json5 | Select-String "keyPassword"` 自检。
+
 ## 8. iOS 专项（硬约束）
 
 1. **iOS 播放内核在 `packages/media_kernel_ios/`**（本地 Flutter 插件包），
