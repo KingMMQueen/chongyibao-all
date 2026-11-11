@@ -2,15 +2,15 @@
   "string": [
     {
       "name": "module_desc",
-      "value": "module description"
+      "value": "宠医宝"
     },
     {
       "name": "EntryAbility_desc",
-      "value": "description"
+      "value": "宠医宝宠物医疗"
     },
     {
       "name": "EntryAbility_label",
-      "value": "chongyibao"
+      "value": "宠医宝"
     }
   ]
 }

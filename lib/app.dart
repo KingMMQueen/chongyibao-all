@@ -16,7 +16,7 @@ class ChongYiBaoApp extends StatelessWidget {
         repository ?? MediaRepositoryImpl();
 
     return MaterialApp(
-      title: 'ChongYiBao',
+      title: '宠医宝',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         useMaterial3: true,

@@ -150,7 +150,30 @@ flutter build hap --release
 7. podspec 的 `platform` 必须 ≤ 工程的 `IPHONEOS_DEPLOYMENT_TARGET`（当前 12.0），
    否则 `pod install` 报平台不兼容。
 
-## 9. 禁止事项
+## 9. 品牌资源（图标与名称）
+
+- **图标源文件是 `assets/branding/logo.svg`（矢量）**，不要直接改各端的 PNG。
+- 一键重新生成三端全部图标：
+
+  ```powershell
+  .\scripts\gen-app-icon.ps1 -Svg "assets\branding\logo.svg"
+  ```
+
+  脚本会用 Chrome 无头模式把 SVG 渲染成 1024 的 PNG，再生成
+  Android 5 档 / iOS 15 档 / HarmonyOS 3 个，共 23 个文件。
+
+- **iOS 图标必须无 Alpha 通道**，否则 App Store 审核直接拒。
+  脚本用 24bpp RGB 画布保证 PNG 是 colorType=2；改动脚本时不要破坏这一点。
+- 图形控制在画布 **84%** 区域，留出安全边距，
+  否则会被 iOS 圆角遮罩与 Android 圆形遮罩裁掉边缘。
+- 应用名「宠医宝」共 4 处，改名字要一起改：
+  `android/app/src/main/AndroidManifest.xml`（android:label）、
+  `ios/Runner/Info.plist`（CFBundleDisplayName + CFBundleName）、
+  `ohos/AppScope/resources/base/element/string.json`（app_name）、
+  `ohos/entry/src/main/resources/base/element/string.json`（EntryAbility_label）、
+  `lib/app.dart`（MaterialApp.title）。
+
+## 10. 禁止事项
 
 - 禁止在 `pubspec.yaml` 引入带原生代码的第三方包，除非三端都有对应实现
 - 禁止使用 `print`，统一用 `AppLog`

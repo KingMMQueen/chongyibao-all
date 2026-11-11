@@ -3,7 +3,7 @@
     <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
-        android:label="chongyibao"
+        android:label="宠医宝"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
